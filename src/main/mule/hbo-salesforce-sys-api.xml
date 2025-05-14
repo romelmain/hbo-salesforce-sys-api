@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd ">
-    <http:listener-config name="hbo-salesforce-sys-api-httpListenerConfig">
-        <http:listener-connection host="0.0.0.0" port="8081" />
-    </http:listener-config>
     <apikit:config name="hbo-salesforce-sys-api-config" api="hbo-salesforce-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
     <flow name="hbo-salesforce-sys-api-main">
-        <http:listener config-ref="hbo-salesforce-sys-api-httpListenerConfig" path="/api/*">
+        <http:listener path="${api.path}" config-ref="HTTP_Listener_config">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
         <apikit:router config-ref="hbo-salesforce-sys-api-config" />
@@ -97,13 +94,13 @@ output application/json
         </error-handler>
     </flow>
     <flow name="hbo-salesforce-sys-api-console">
-        <http:listener config-ref="hbo-salesforce-sys-api-httpListenerConfig" path="/console/*">
+        <http:listener path="/console/*" config-ref="HTTP_Listener_config">
             <http:response statusCode="#[vars.httpStatus default 200]">
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:response>
             <http:error-response statusCode="#[vars.httpStatus default 500]">
-                <http:body>#[payload]</http:body>
-                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
             </http:error-response>
         </http:listener>
         <apikit:console config-ref="hbo-salesforce-sys-api-config" />
@@ -124,35 +121,7 @@ output application/json
         </error-handler>
     </flow>
     <flow name="get:\leads:hbo-salesforce-sys-api-config">
-        <ee:transform doc:name="Transform Message">
-            <ee:message>
-                <ee:set-payload><![CDATA[%dw 2.0
-output application/json
----
-[
-  {
-    name: "Romel",
-    lastName: "Herrera",
-    company: "ABC",
-    description: "Empresa Tecnologica",
-    status: "Nuevo",
-    phone: "111111",
-    email: "aa@aaa.com",
-    address: "El Paraiso"
-  }, 
-  {
-    name: "Karem",
-    lastName: "Meza",
-    company: "XYZ",
-    description: "Ropa deportiva",
-    status: "Nuevo",
-    phone: "22222",
-    email: "bb@xyz.com",
-    address: "Las Acasias"
-  }
-] as Array {encoding: "UTF-8", mediaType: "application/json"}]]></ee:set-payload>
-            </ee:message>
-        </ee:transform>
+		<flow-ref doc:name="getLeadsFlow" doc:id="fb8e6fa9-5a8f-485a-b8c0-c9db77e0a3d5" name="getLeadsFlow"/>
     </flow>
     <flow name="get:\leads\(id):hbo-salesforce-sys-api-config">
         <ee:transform doc:name="Transform Message">
