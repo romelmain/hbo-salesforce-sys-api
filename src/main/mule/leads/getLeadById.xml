@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="getLeadByIdFlow" doc:id="f1997af5-5bf2-4659-bc3f-c589a0d9dbf9" >
+		<logger level="INFO" doc:name="Start getLeadByIdFlow" doc:id="42d6bb32-77ff-4c5d-9c67-4ebde20c3c97" />
+		<ee:transform doc:name="Set Query" doc:id="9d9dc446-7d3f-4db9-a09e-e0557905f8f6" >
+			<ee:message >
+				<ee:set-payload ><![CDATA["SELECT Id, Name FROM Lead WHERE ID = '" ++ vars.id ++ "'" ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="bbbfe8f2-5eb7-4bda-b70d-582c2735f771" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="0e0cd38d-e7b9-4d36-b9a7-be764fd0d706" >
+				<salesforce:query doc:name="Lead By ID" doc:id="3c81e3da-a85b-4b24-8461-154a4c3297df" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[#[payload]]]></salesforce:salesforce-query>
+		</salesforce:query>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="aa7b7e41-b48b-4a57-ad37-a7090a622577" >
+						<ee:transform doc:name="Set Error" doc:id="21f04073-e92f-4ffb-bc8d-a19031677d7d" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<logger level="ERROR" doc:name="Set Error" doc:id="9670e60e-b1f7-4da2-825e-51d5c1a8be98" message="#[payload]"/>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
+		<ee:transform doc:name="Set Response" doc:id="e42956a4-087f-484a-86d4-fb27a39f4672" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="End getLeadByIdFlow" doc:id="3d113f30-0d03-4aa6-be01-71ef7e224380" message="End getLeadByIdFlow"/>
+	</flow>
+</mule>

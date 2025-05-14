@@ -7,10 +7,7 @@ http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mu
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="getLeadsFlow" doc:id="fe691201-6194-4637-aba5-d4057f8c8cc0" >
 		<logger level="INFO" doc:name="Start getLeadsFlow" doc:id="3c602b8c-f69e-4151-84e5-28d690978bab" message="Start getLeadsFlow"/>
-		<salesforce:query doc:name="Query" doc:id="2530ea48-2f35-457a-9b78-59a8add9a0cc" config-ref="Salesforce_Config">
-			<salesforce:salesforce-query ><![CDATA[SELECT Id, Name
-FROM Lead]]></salesforce:salesforce-query>
-		</salesforce:query>
+		<flow-ref doc:name="queryFlow" doc:id="c30f579c-8ec6-4e98-9493-787cc4d8fb73" name="queryFlow"/>
 		<ee:transform doc:name="Set Response" doc:id="4c52d3ed-a2ef-4957-aab7-da0d3261ad1b" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -20,5 +17,29 @@ payload]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="End getLeadsFlow" doc:id="fc79bd43-7efa-41e4-8fbc-3700a885fad7" message="End getLeadsFlow"/>
+	</flow>
+	<flow name="queryFlow" doc:id="1a74a174-6b6d-491a-a2b0-ed2e6ab3e0a9" >
+		<logger level="INFO" doc:name="Logger" doc:id="c393d1d4-9d55-4a2f-9881-4ca47c2f1906" />
+		<until-successful maxRetries="${until.successful.maxretries}" doc:name="Until Successful" doc:id="0d58bd2d-4591-4599-81c4-362595f91b20" millisBetweenRetries="${until.successful.timebetween}">
+			<try doc:name="Try" doc:id="e7297623-58b4-454f-83b6-81c357543c45" >
+				<salesforce:query doc:name="Query" doc:id="2530ea48-2f35-457a-9b78-59a8add9a0cc" config-ref="Salesforce_Config">
+			<salesforce:salesforce-query><![CDATA[SELECT Id, Name
+FROM Lead]]></salesforce:salesforce-query>
+		</salesforce:query>
+				<error-handler >
+					<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="e8e4afe9-2cdd-40b5-9fd9-77c7326fb18c" >
+						<ee:transform doc:name="Set Error" doc:id="73307119-7e62-4cf5-ad0d-a02cdcfda30c" >
+							<ee:message >
+								<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+							</ee:message>
+						</ee:transform>
+						<logger level="ERROR" doc:name="Set Error" doc:id="11c1a142-4b20-40ba-9150-97b64d7c238e" message="#[payload]"/>
+					</on-error-propagate>
+				</error-handler>
+			</try>
+		</until-successful>
 	</flow>
 </mule>
