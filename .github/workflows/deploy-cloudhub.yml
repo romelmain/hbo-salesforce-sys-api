@@ -12,6 +12,30 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - run:  echo ${{ secrets.ANYPOINT_CLIENT_ID }}
 
-      
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Build with Maven
+        env:
+            ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+            ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+            ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
+        run: |
+            mvn clean package -DskipTests \
+                -DclientId=$ANYPOINT_CLIENT_ID \
+                -DclientSecret=$ANYPOINT_CLIENT_SECRET \
+                -Denvironment=$ANYPOINT_ENVIRONMENT
+
+      - name: Deploy to CloudHub
+        env:
+          ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+          ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+          ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
+        run: |
+          mvn deploy -DclientId=$ANYPOINT_CLIENT_ID \
+                     -DclientSecret=$ANYPOINT_CLIENT_SECRET \
+                     -Denvironment=$ANYPOINT_ENVIRONMENT
