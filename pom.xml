@@ -33,12 +33,12 @@
 				<extensions>true</extensions>
 				<configuration>
 					<cloudHubDeployment>
-						<clientId>${anypoint.client_id}</clientId>
-						<clientSecret>${anypoint.client_secret}</clientSecret>
-						<environment>${anypoint.environment}</environment>
-						<businessGroup>${anypoint.businessGroup}</businessGroup>
+						<clientId>${client_id}</clientId>
+						<clientSecret>${client_secret}</clientSecret>
+						<environment>${environment}</environment>
+						<businessGroup>${businessGroup}</businessGroup>
 						<applicationName>${project.artifactId}</applicationName>
-						<region>us-east-1</region>
+						<region>us-east-2</region>
 						<workers>1</workers>
 						<workerType>MICRO</workerType>
 					</cloudHubDeployment>

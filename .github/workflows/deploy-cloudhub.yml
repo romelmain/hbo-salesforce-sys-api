@@ -32,7 +32,7 @@ jobs:
 
       - name: Deploy to Anypoint CloudHub
         run: |
-          mvn mule:deploy -X \
+          mvn mule:deploy \
             -Danypoint.client_id=${{ secrets.ANYPOINT_CLIENT_ID }} \
             -Danypoint.client_secret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
             -Danypoint.environment=${{ secrets.ANYPOINT_ENVIRONMENT }} \
