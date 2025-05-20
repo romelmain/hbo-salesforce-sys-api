@@ -33,14 +33,14 @@
 				<extensions>true</extensions>
 				<configuration>
 					<cloudHubDeployment>
-						<uri>https://anypoint.mulesoft.com</uri>
-						<clientId>${clientId}</clientId>
-						<clientSecret>${clientSecret}</clientSecret>
-						<environment>${environment}</environment>
-						<applicationName>hbo-salesforce-sys-api</applicationName>
-						<region>us-east-2</region> <!-- Cambia la región si corresponde -->
-						<workerType>MICRO</workerType>
+						<clientId>${anypoint.client_id}</clientId>
+						<clientSecret>${anypoint.client_secret}</clientSecret>
+						<environment>${anypoint.environment}</environment>
+						<businessGroup>${anypoint.businessGroup}</businessGroup>
+						<applicationName>${project.artifactId}</applicationName>
+						<region>us-east-1</region>
 						<workers>1</workers>
+						<workerType>MICRO</workerType>
 					</cloudHubDeployment>
 					<classifier>mule-application</classifier>
 				</configuration>
