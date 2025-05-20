@@ -20,7 +20,15 @@ jobs:
           java-version: '17'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        env:
+            ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+            ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+            ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
+        run: |
+            mvn clean package -DskipTests \
+                -Danypoint.client_id=$ANYPOINT_CLIENT_ID \
+                -Danypoint.client_secret=$ANYPOINT_CLIENT_SECRET \
+                -Danypoint.environment=$ANYPOINT_ENVIRONMENT
 
       - name: Deploy to CloudHub
         env:
