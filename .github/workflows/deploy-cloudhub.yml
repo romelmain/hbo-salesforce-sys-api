@@ -1,0 +1,33 @@
+name: Deploy MuleSoft app to Cloudhub (dev)
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Deploy to CloudHub
+        env:
+          ANYPOINT_CLIENT_ID: ${{ secrets.ANYPOINT_CLIENT_ID }}
+          ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
+          ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
+        run: |
+          mvn deploy -Danypoint.client_id=$ANYPOINT_CLIENT_ID \
+                     -Danypoint.client_secret=$ANYPOINT_CLIENT_SECRET \
+                     -Danypoint.environment=$ANYPOINT_ENVIRONMENT
