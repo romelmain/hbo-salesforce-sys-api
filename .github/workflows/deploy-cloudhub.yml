@@ -26,9 +26,9 @@ jobs:
             ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
         run: |
             mvn clean package -DskipTests \
-                -Danypoint.client_id=$ANYPOINT_CLIENT_ID \
-                -Danypoint.client_secret=$ANYPOINT_CLIENT_SECRET \
-                -Danypoint.environment=$ANYPOINT_ENVIRONMENT
+                -DclientId=$ANYPOINT_CLIENT_ID \
+                -DclientSecret=$ANYPOINT_CLIENT_SECRET \
+                -Denvironment=$ANYPOINT_ENVIRONMENT
 
       - name: Deploy to CloudHub
         env:
@@ -36,6 +36,6 @@ jobs:
           ANYPOINT_CLIENT_SECRET: ${{ secrets.ANYPOINT_CLIENT_SECRET }}
           ANYPOINT_ENVIRONMENT: ${{ secrets.ANYPOINT_ENVIRONMENT }}
         run: |
-          mvn deploy -Danypoint.client_id=$ANYPOINT_CLIENT_ID \
-                     -Danypoint.client_secret=$ANYPOINT_CLIENT_SECRET \
-                     -Danypoint.environment=$ANYPOINT_ENVIRONMENT
+          mvn deploy -DclientId=$ANYPOINT_CLIENT_ID \
+                     -DclientSecret=$ANYPOINT_CLIENT_SECRET \
+                     -Denvironment=$ANYPOINT_ENVIRONMENT
