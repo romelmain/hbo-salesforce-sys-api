@@ -34,8 +34,8 @@
 				<configuration>
 					<cloudHubDeployment>
 						<uri>https://anypoint.mulesoft.com</uri>
-						<clientId>${client_id}</clientId>
-						<clientSecret>${client_secret}</clientSecret>
+						<clientId>${clientId}</clientId>
+						<clientSecret>${clientSecret}</clientSecret>
 						<environment>${environment}</environment>
 						<applicationName>hbo-salesforce-sys-api</applicationName>
 						<region>us-east-2</region> <!-- Cambia la región si corresponde -->
