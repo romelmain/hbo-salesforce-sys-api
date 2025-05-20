@@ -35,5 +35,5 @@ jobs:
           mvn mule:deploy \
             -Danypoint.client_id=${{ secrets.ANYPOINT_CLIENT_ID }} \
             -Danypoint.client_secret=${{ secrets.ANYPOINT_CLIENT_SECRET }} \
-            -Danypoint.environment=${{ secrets.ANYPOINT_ENV }} \
+            -Danypoint.environment=${{ secrets.ANYPOINT_ENVIRONMENT }} \
             -Danypoint.businessGroup=${{ secrets.ANYPOINT_BUSINESS_GROUP }}
