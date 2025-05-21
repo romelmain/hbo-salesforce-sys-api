@@ -17,6 +17,9 @@
 
 		<app.runtime>4.9.0</app.runtime>
 		<mule.maven.plugin.version>4.3.0</mule.maven.plugin.version>
+
+		<main.class>org.mule.runtime.module.launcher.MuleContainerBootstrap</main.class>
+
 	</properties>
 
 	<build>
@@ -32,16 +35,6 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-					<cloudHubDeployment>
-						<clientId>${client_id}</clientId>
-						<clientSecret>${client_secret}</clientSecret>
-						<environment>${environment}</environment>
-						<businessGroup>${businessGroup}</businessGroup>
-						<applicationName>${project.artifactId}</applicationName>
-						<region>us-east-2</region>
-						<workers>1</workers>
-						<workerType>MICRO</workerType>
-					</cloudHubDeployment>
 					<classifier>mule-application</classifier>
 				</configuration>
 			</plugin>
@@ -85,6 +78,9 @@
 			<version>11.1.0</version>
 			<classifier>mule-plugin</classifier>
 		</dependency>
+
+
+
 	</dependencies>
 
 	<repositories>
