@@ -23,7 +23,7 @@ jobs:
         distribution: 'zulu'
         java-version: 17
     - name: Build with Maven
-      run: mvn -B package -DskipMunitTests
+      run: mvn -B package --file pom.xml -DskipMunitTests
 
     - name: Debug artifact generation
       run: ls -l target
