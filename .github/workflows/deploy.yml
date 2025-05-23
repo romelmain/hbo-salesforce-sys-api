@@ -40,6 +40,12 @@ jobs:
         mv "$artifactName1" "$artifactName2"
         echo "Renamed $artifactName1 to $artifactName2"
 
+    - name: Upload artifact 
+      uses: actions/upload-artifact@v4
+      with:
+          name: artifacts
+          path: target/*.jar
+
 
           
  
