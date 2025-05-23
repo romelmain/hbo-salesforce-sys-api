@@ -24,4 +24,10 @@ jobs:
         java-version: 17
     - name: Build with Maven
       run: mvn -B package -DskipMunitTests
+      
+    - name: Upload artifact 
+      uses: actions/upload-artifact@v3
+      with:
+          name: artifacts
+          path: target/*.jar
 
