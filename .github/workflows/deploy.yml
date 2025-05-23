@@ -23,7 +23,7 @@ jobs:
         distribution: 'zulu'
         java-version: 17
     - name: Build with Maven
-      run: mvn -B package --file pom.xml -DskipMunitTests
+      run: mvn clean -B package --file pom.xml -DskipMunitTests
 
     - name: Debug artifact generation
       run: ls -l target
@@ -69,7 +69,7 @@ jobs:
         KEY: ${{ secrets.decryption_key }}
       run: |
         artifactName=$(ls *.jar | head -1)
-        mvn deploy -DskipMunitTests -DmuleDeploy \
+        mvn clean deploy -DskipMunitTests -DmuleDeploy \
          -Dmule.artifact=$artifactName \
          -Dclient.id="$ID" \
          -Dclient.secret="$SECRET" \
