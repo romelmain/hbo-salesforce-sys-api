@@ -24,21 +24,28 @@ jobs:
         java-version: 17
     - name: Build with Maven
       run: mvn -B package -DskipMunitTests
+
     - name: Debug artifact generation
       run: ls -l target
+
     - name: Stamp artifact file name with commit hash
       run: |
         artifactName1=$(ls target/*.jar | head -1)
+        if [ -z "$artifactName1" ]; then
+          echo "No artifact found in target/ directory"
+          exit 1
+        fi
         commitHash=$(git rev-parse --short "$GITHUB_SHA")
-        artifactName2=$(ls target/*.jar | head -1 | sed "s/.jar/-$commitHash.jar/g")
-        mv $artifactName1 $artifactName2
+        artifactName2=$(echo "$artifactName1" | sed "s/.jar/-$commitHash.jar/g")
+        mv "$artifactName1" "$artifactName2"
         echo "Renamed $artifactName1 to $artifactName2"
+
     - name: Upload artifact 
       uses: actions/upload-artifact@v3
       with:
           name: artifacts
           path: target/*.jar
-        
+          
   deploy:
     needs: build
     runs-on: ubuntu-latest
