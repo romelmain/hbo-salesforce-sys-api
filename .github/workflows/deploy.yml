@@ -45,6 +45,36 @@ jobs:
       with:
           name: artifacts
           path: target/*.jar
+          
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:    
+    - name: Checkout this repo
+      uses: actions/checkout@v3
+    - name: Cache dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - uses: actions/download-artifact@v3
+      with:
+        name: artifacts
+    - name: Deploy to dev
+      env:
+        ID: ${{ secrets.CONNECTED_APP_CLIENT_ID }}
+        SECRET: ${{ secrets.CONNECTED_APP_CLIENT_SECRET }}
+        KEY: ${{ secrets.decryption_key }}
+      run: |
+        artifactName=$(ls *.jar | head -1)
+        mvn deploy -DskipMunitTests -DmuleDeploy \
+         -Dmule.artifact=$artifactName \
+         -Dclient.id="$ID" \
+         -Dclient.secret="$SECRET" \
+         -Ddecryption.key="$KEY" \
+         --settings .maven/settings.xml
 
 
           
